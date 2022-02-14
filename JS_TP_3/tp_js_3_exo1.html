@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Let's move!</title>
+</head>
+<!-- SECTION - BODY -->
+<body>
+	<fieldset>
+		<legend id="gameLegend">Les points</legend>
+		<canvas id="arena" style="border: 1px solid #000000"></canvas>
+	</fieldset>
+</body>
+<!-- !SECTION -->
+
+<!-- SECTION - SCRIPT -->
+<script>
+	document.addEventListener("DOMContentLoaded",startLoop);
+	const event = new Event('bang');
+	
+	let intervalId; //intervalles pour le timer 
+	const fps = 60; // frame per seconds
+	let s = 4;
+	let nbCircle = 0;
+	
+	let legend; //légende du cadre
+	let canvas;	//cadre
+	let context; // contexte 2D du cadre ca,vas
+	const canvasWidth = 600;
+	const canvasHeight = 600;
+
+	var circleList = [] ;
+	var coords;
+
+
+	/* SECTION - XHR object */
+	var coordsXHR = new XMLHttpRequest(); //XHR asking for coordinates https://stwom.herokuapp.com/
+	function reqListener () {
+		coords = JSON.parse(this.responseText);
+		
+	}
+	coordsXHR.onload = reqListener;
+	coordsXHR.open("get", "https://stwom.herokuapp.com/"+canvasHeight, true);
+	coordsXHR.send();
+
+	/* !SECTION */
+
+	
+
+	/* ANCHOR - startLoop */
+	function startLoop(){
+		canvas = document.getElementById("arena");
+		canvas.setAttribute("width",canvasWidth);
+		canvas.setAttribute("height",canvasHeight);
+		context = canvas.getContext("2d");
+		legend = document.getElementById("gameLegend");
+		intervalId = window.setInterval(boucle,100);
+	}
+
+	/* ANCHOR - endLoop */
+	function endLoop(){
+		window.clearInterval(intervalId);	
+	}
+
+	/* ANCHOR - boucle */
+	function boucle(){
+		coordsXHR.open("get", "https://stwom.herokuapp.com/"+canvasHeight, true);	
+		coordsXHR.send();
+		let c = new Circle(context, canvasWidth, canvasHeight, coords.x, coords.y, Math.floor(Math.random() * 40));
+		c.draw();
+		circleList.push(c);
+		nbCircle += 1;
+		if(nbCircle > 4000){
+			endLoop();
+		}
+		for (let index = 0; index < circleList.length; index++) {
+			circleList[index].draw();
+		}
+	}
+
+	function getRandomColor() {
+		var letters = '0123456789ABCDEF';
+		var color = '#';
+		for (var i = 0; i < 6; i++) {
+			color += letters[Math.floor(Math.random() * 16)];
+		}
+		return color;
+	}
+
+
+
+	class Circle {
+		constructor(context, canvasWidth, canvasHeight, x, y, radius=10){
+			this.context=context;
+			this.canvasWidth=canvasWidth;
+			this.canvasHeight=canvasHeight;
+			this.radius=radius;
+			this.x=x;
+			this.y=y;
+		}
+		clear(){
+			this.context.fillStyle = "white";
+			this.context.beginPath();
+			this.context.arc(this.x,this.y, this.radius,0,2*Math.PI,1);
+			this.context.fill();
+		}
+		draw(){
+			this.context.fillStyle = getRandomColor();
+			this.context.beginPath();
+			this.context.arc(this.x,this.y, this.radius,0,2*Math.PI,1);
+			this.context.fill();
+		}
+		update(){
+			this.draw();
+		}
+	}
+
+</script>
+<!-- !SECTION -->
+</html>

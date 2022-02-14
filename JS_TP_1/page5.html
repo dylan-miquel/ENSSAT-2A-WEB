@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<style type="text/css">
+			#navlist{position:relative;}
+			#navlist li{margin:0;padding:0;list-style:none;position:absolute;top:0;}
+			#navlist li,#navlist a{height:60px;display:block;}
+			#play{left:0px;width:47px;}
+			#play{
+				background-image:url("image1.jpg"); 
+				border:black; 
+				border-width: 1px; 
+				width:300px; 
+				height:300px!important;
+				background-repeat:no-repeat; 
+				background-size:300px 300px}
+		</style>
+		<SCRIPT LANGUAGE="Javascript" SRC="geometrie/point.js"></SCRIPT>
+		<script> 
+			var i=1; 
+			var j=1; 
+			var image = 1;
+			var aCanvas;
+            window.addEventListener("DOMContentLoaded", init);
+			function init()
+			{
+				aCanvas=document.getElementById('myCanvas');      
+                let liElt = document.getElementById("play");
+                liElt.addEventListener("click", updateCanvas);
+			}
+
+			function swapImage(){
+				image = (image + 1) % 8;
+				play.style.backgroundImage = 'url("image'+image+'.jpg")';
+			}
+
+			function updateCanvas()
+			{
+				if(j<10)
+				{
+					if(i>9){
+						i=1;
+						j++;
+					}
+					point1=new Point(20*i,20*j,aCanvas);
+					point1.ache();
+					i++;
+				}
+				swapImage();
+			}
+		
+		</script>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="200" height="200"></canvas>
+		<ul id="navlist">
+			<li id="play">
+        </ul>  
+	</body>
+</html>

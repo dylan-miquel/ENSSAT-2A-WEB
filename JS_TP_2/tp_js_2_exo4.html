@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Let's move!</title>
+</head>
+<!-- SECTION - BODY -->
+<body>
+	<fieldset>
+		<legend id="gameLegend">Déplacement</legend>
+		<canvas id="arena" style="border: 1px solid #000000"></canvas>
+	</fieldset>
+</body>
+<!-- !SECTION -->
+
+<!-- SECTION - SCRIPT -->
+<script>
+
+	/* TODO - On a le tableau avec les 3 balles ils faut juste le faire faire les déplacement et les stops et les départs différés */
+
+	document.addEventListener("DOMContentLoaded",startLoop);
+
+	
+	
+	const event = new Event('bang');
+	
+	let intervalId; 
+	
+	let legend;
+	
+	let canvas;
+	let context; 
+	const canvasWidth = 600;
+	const canvasHeight = 600;
+	
+	const fps = 40; // frame per seconds
+	const speedInPxPs = 100; // in px  per seconds
+	
+	const squareWidth = 50;
+	let squareX = 0;
+	let squareY = 10; 
+	let speedX = 0; 
+	
+	var s = 4;
+	var loopIntervalId;
+
+	
+	let squares = [new Ball(squareX, squareY, squareWidth, speedX, color = 'red'),
+		new Ball(squareX, squareY+30, squareWidth, speedX, color = 'blue'), 
+		new Ball(squareX, squareY+60, squareWidth, speedX, color = 'red')] 
+
+	/* ANCHOR - startLoop */
+	function startLoop(){
+		canvas = document.getElementById("arena");
+		canvas.setAttribute("width",canvasWidth);
+		canvas.setAttribute("height",canvasHeight);
+		context = canvas.getContext("2d");
+		legend = document.getElementById("gameLegend");
+		loopIntervalId = window.setInterval(boucle,1000);
+		legend.innerHTML = s;
+	}
+
+	/* ANCHOR - endLoop */
+	function endLoop(){
+		window.clearInterval(loopIntervalId);	
+	}
+
+	/* ANCHOR - boucle */
+	function boucle(){
+		if (s > 1){
+			s -= 1;
+			legend.innerHTML = s;
+		} else {
+			s -= 1;
+			legend.innerHTML = s;
+			endLoop();
+			startGame();
+		}
+	}
+
+	/* ANCHOR - startGame */
+	function startGame(){
+		legend.addEventListener('bang', function (e) { 
+				e.target.innerHTML = "touché en position X: "+squareX; 	
+			}, false);
+		speedX = speedInPxPs / fps; //100px per seconds and 30fps => 3px per frame (approx)
+		intervalId = window.setInterval(gameLoop,1000/fps); // 30fps
+	}
+
+	/* ANCHOR - endGame */
+	function endGame(){
+		window.clearInterval(intervalId);	
+	}
+
+	/* ANCHOR - gameLoop */
+	function gameLoop(){
+		clearSquare();
+		updateSquare();
+		drawSquare();
+	}
+
+	/* SECTION - CLASSES */
+	class Square {
+		constructor(squareX, squareY, squareWidth, speedX, color = 'red'){
+			this.squareX = squareX;
+			this.squareY = squareY;
+			this.squareWidth = squareWidth;
+			this.speedX = speedX;
+			this.color = color;
+		}
+
+		clear(){
+			this.context.clearRect(this.squareX-1, this.squareY-1, squareWidth+2, squareWidth+2 )
+		}
+
+		update(){
+			if(squareX + squareWidth >= canvasWidth){
+				this.clear()
+			} else {
+				squareX = squareX + speedX;
+			}
+		}
+
+		draw(){
+			context.fillRect(this.squareX, this.squareY, this.squareWidth, this.squareWidth);
+			context.fillStyle = this.color;
+		}
+	}
+	/* !SECTION */
+</script>
+<!-- !SECTION -->
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Let's move!</title>
+</head>
+<body>
+	<h1 id="seconde">10</h1>
+
+</body>
+<script>
+	document.addEventListener("DOMContentLoaded",startLoop);
+
+	var s = 10;
+	var intervalId;
+
+	function startLoop(){
+		intervalId = window.setInterval(boucle,1000);
+	}
+
+	function endLoop(){
+		window.clearInterval(intervalId);	
+	}
+
+	function boucle(){
+		if (s > 0){
+			s -= 1;
+			seconde.innerText = s;
+		} else {
+			endLoop();
+		}
+	}
+
+
+
+</script>
+</html>
